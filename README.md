@@ -27,7 +27,17 @@ Este sistema foi criado com o objetivo de aplicar conceitos de desenvolvimento w
 - Django 🌐  
 - HTML5  
 - CSS3 🎨  
-- JavaScript ⚡  
+- JavaScript ⚡
+
+
+🔌 API
+
+O sistema possui uma API simples para manipulação dos dados:
+
+GET /api/clientes/ → Lista todos os clientes
+POST /api/clientes/deletar/<id>/ → Remove cliente
+GET /api/clientes/editar/<id>/ → Busca dados do cliente
+POST /api/clientes/editar/<id>/ → Atualiza cliente  
 
 ---
 
@@ -51,11 +61,4 @@ sistema_cadastro/
 ├── manage.py
 └── db.sqlite3
 
-🔌 API
 
-O sistema possui uma API simples para manipulação dos dados:
-
-GET /api/clientes/ → Lista todos os clientes
-POST /api/clientes/deletar/<id>/ → Remove cliente
-GET /api/clientes/editar/<id>/ → Busca dados do cliente
-POST /api/clientes/editar/<id>/ → Atualiza cliente
