@@ -1,0 +1,173 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RV CELL - Cadastro de Clientes</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<div class="container">
+
+   <div class="topbar">
+    <h1>RV CELL</h1>
+    <a href="/clientes/" class="btn-lista">
+    Ver lista de clientes →
+</a>
+</div>
+<form method="POST" id="form-cliente" aria-label="Formulário de cadastro de clientes">
+    {% csrf_token %}
+
+    <input type="hidden" id="cliente-id">
+
+    <label for="nome">Nome:</label>
+    <input type="text" name="nome" id="nome" placeholder="Digite o nome completo" aria-required="true">
+
+    <label for="idade">Idade:</label>
+    <input type="number" name="idade" id="idade" placeholder="Digite a idade" aria-required="true">
+
+    <label for="telefone">Telefone:</label>
+    <input type="text" name="telefone" id="telefone" placeholder="Digite o telefone" aria-required="true">
+
+    <button type="submit">Salvar</button>
+</form>
+
+    <h2>Clientes cadastrados</h2>
+
+    <div id="mensagem" aria-live="polite"></div>
+
+    <ul id="lista-clientes" aria-live="polite"></ul>
+
+</div>
+
+
+<script>
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+const csrftoken = getCookie('csrftoken');
+
+console.log("carregando clientes...");
+carregarClientes();
+
+function carregarClientes() {
+    fetch('/api/clientes/')
+        .then(response => response.json())
+        .then(data => {
+
+            console.log("DEBUG clientes:", data);
+
+            let lista = document.getElementById('lista-clientes');
+            lista.innerHTML = "";
+
+            data.forEach(cliente => {
+
+                let item = document.createElement('li');
+
+                item.innerHTML = `
+                    ${cliente.nome_completo} - ${cliente.idade} anos - ${cliente.telefone}
+
+                    <button onclick="editarCliente(${cliente.id})">
+                        Editar
+                    </button>
+
+                    <button onclick="deletarCliente(${cliente.id})">
+                        Excluir
+                    </button>
+                `;
+
+                lista.appendChild(item);
+            });
+        })
+        .catch(error => {
+            console.error("Erro ao carregar clientes:", error);
+        });
+}
+
+function deletarCliente(id) {
+    fetch(`/api/clientes/deletar/${id}/`, {
+        method: "POST",
+        headers: {
+    "X-CSRFToken": csrftoken
+}
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === "ok") {
+            carregarClientes();
+            document.getElementById("mensagem").innerText = "Cliente removido com sucesso!";
+        }
+    });
+}
+
+function editarCliente(id) {
+    fetch(`/api/clientes/editar/${id}/`)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("cliente-id").value = id;
+            document.getElementById("nome").value = data.nome_completo;
+            document.getElementById("idade").value = data.idade;
+            document.getElementById("telefone").value = data.telefone;
+        });
+}
+
+document.getElementById("form-cliente").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    let id = document.getElementById("cliente-id").value;
+
+    if (!id) {
+        fetch("/", {
+            method: "POST",
+            headers: {
+    "X-CSRFToken": csrftoken
+            },
+            body: new FormData(this)
+        })
+        .then(() => {
+            this.reset();
+            carregarClientes();
+        });
+
+        return;
+    }
+
+    fetch(`/api/clientes/editar/${id}/`, {
+        method: "POST",
+        headers: {
+    "X-CSRFToken": csrftoken
+        },
+        body: new FormData(this)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === "ok") {
+            carregarClientes();
+            this.reset();
+            document.getElementById("cliente-id").value = "";
+            document.getElementById("mensagem").innerText = "Cliente atualizado com sucesso!";
+        }
+    });
+    
+});
+
+
+</script>
+
+</body>
+</html>

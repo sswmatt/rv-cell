@@ -1,0 +1,103 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RV CELL - Lista de Clientes</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<!-- 🔵 TOPO (tarja azul RV CELL) -->
+<div class="topbar">
+    <h1>RV CELL</h1>
+</div>
+
+<div class="container">
+
+    <h2>Lista de Clientes</h2>
+
+    <!-- Mensagens acessíveis -->
+    <div id="mensagem" aria-live="polite"></div>
+
+    <!-- Lista -->
+    <ul id="lista-clientes" aria-label="Lista de clientes cadastrados"></ul>
+
+    <br>
+
+    <a href="/" class="btn-voltar">← Voltar para cadastro</a>
+
+</div>
+
+<script>
+
+// 🔄 Carregar clientes da API
+function carregarClientes() {
+    fetch('/api/clientes/')
+        .then(res => res.json())
+        .then(data => {
+
+            let lista = document.getElementById("lista-clientes");
+            lista.innerHTML = "";
+
+            data.forEach(cliente => {
+
+                lista.innerHTML += `
+                    <li class="cliente-item">
+                        <span>
+                            <strong>${cliente.nome_completo}</strong><br>
+                            Idade: ${cliente.idade} anos<br>
+                            Telefone: ${cliente.telefone}
+                        </span>
+
+                        <div class="botoes">
+                            <button onclick="editar(${cliente.id})">Editar</button>
+                            <button onclick="deletar(${cliente.id})">Excluir</button>
+                        </div>
+                    </li>
+                `;
+            });
+        });
+}
+
+// 🗑️ Deletar cliente
+function deletar(id) {
+    fetch(`/api/clientes/deletar/${id}/`, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": getCookie('csrftoken')
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === "ok") {
+            document.getElementById("mensagem").innerText = "Cliente removido com sucesso!";
+            carregarClientes();
+        }
+    });
+}
+
+// ✏️ Editar (volta para página 1)
+function editar(id) {
+    window.location.href = `/?editar=${id}`;
+}
+
+// 🍪 CSRF
+function getCookie(name) {
+    let cookieValue = null;
+    document.cookie.split(';').forEach(cookie => {
+        if (cookie.trim().startsWith(name + '=')) {
+            cookieValue = cookie.split('=')[1];
+        }
+    });
+    return cookieValue;
+}
+
+// iniciar
+carregarClientes();
+
+</script>
+
+</body>
+</html>
