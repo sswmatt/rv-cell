@@ -50,3 +50,12 @@ sistema_cadastro/
 ├── core/
 ├── manage.py
 └── db.sqlite3
+
+🔌 API
+
+O sistema possui uma API simples para manipulação dos dados:
+
+GET /api/clientes/ → Lista todos os clientes
+POST /api/clientes/deletar/<id>/ → Remove cliente
+GET /api/clientes/editar/<id>/ → Busca dados do cliente
+POST /api/clientes/editar/<id>/ → Atualiza cliente
