@@ -1,26 +1,52 @@
-# Sistema de Cadastro de Clientes
+# 🚀 Sistema de Cadastro de Clientes
 
-Sistema web desenvolvido com Django para cadastro, edição e exclusão de clientes.
+Sistema web desenvolvido com **Django** para gerenciamento de clientes, permitindo cadastro, edição, exclusão e visualização em tempo real.
 
-## Funcionalidades
-- Cadastro de clientes
-- Listagem de clientes
-- Edição de dados
-- Exclusão de clientes
+---
 
-## Tecnologias utilizadas
-- Python
-- Django
-- HTML
-- CSS
-- JavaScript
+## 📌 Sobre o projeto
 
-## Como rodar o projeto
-1. Clonar o repositório
-2. Criar ambiente virtual
-3. Instalar dependências
-4. Rodar servidor:
-   python manage.py runserver
+Este sistema foi criado com o objetivo de aplicar conceitos de desenvolvimento web utilizando o framework **Django**, integrando backend com frontend dinâmico através de **JavaScript** e consumo de API.
 
-## Autor
-Matheus Vieira
+---
+
+## ⚙️ Funcionalidades
+
+✅ Cadastro de clientes  
+✅ Listagem dinâmica de clientes  
+✅ Edição de dados  
+✅ Exclusão de clientes  
+✅ Atualização em tempo real sem recarregar a página  
+✅ Separação em múltiplas páginas  
+
+---
+
+## 🖥️ Tecnologias utilizadas
+
+- Python 🐍  
+- Django 🌐  
+- HTML5  
+- CSS3 🎨  
+- JavaScript ⚡  
+
+---
+
+## 📂 Estrutura do projeto
+
+```bash
+sistema_cadastro/
+│
+├── clientes/
+│   ├── models.py
+│   ├── views.py
+│   ├── urls.py
+│   ├── templates/
+│   │   ├── home.html
+│   │   └── lista.html
+│   └── static/
+│       └── css/
+│           └── style.css
+│
+├── core/
+├── manage.py
+└── db.sqlite3
